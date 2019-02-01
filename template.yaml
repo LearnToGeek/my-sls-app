@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+    my-sls-app
+
+    Sample SAM Template for my-sls-app
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+    Function:
+        Timeout: 60
+
+
+Resources:
+
+    GetEC2RegionsFunction:
+        Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+        Properties:
+            FunctionName: GetEC2Regions
+            Description: SAM demo getting EC2 Regions
+            CodeUri: get-ec2-regions/
+            Handler: main.GetEC2Regions
+            Runtime: python3.7
+            Role : arn:aws:iam::752369343347:role/EC2-full-Access
+            Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+                Variables:
+                    PARAM1: VALUE
+            Events:
+                GetEC2RegionsAPI:
+                    Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+                    Properties:
+                        Path: /getec2regions
+                        Method: get
+
+Outputs:
+
+    GetEC2RegionsAPI:
+      Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+      Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/getec2regions/"
+
+    GetEC2RegionsFunction:
+      Description: "Hello World Lambda Function ARN"
+      Value: !GetAtt GetEC2RegionsFunction.Arn
